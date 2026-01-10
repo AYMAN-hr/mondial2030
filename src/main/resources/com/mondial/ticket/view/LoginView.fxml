@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<VBox alignment="CENTER" spacing="20" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.mondial.ticket.view.LoginController"
+      style="-fx-background-color: linear-gradient(to bottom, #1a237e, #283593);">
+    <padding>
+        <Insets top="40" right="50" bottom="40" left="50"/>
+    </padding>
+    <Label text="MONDIAL 2030" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+    <Label text="Plateforme de Gestion des Tickets" style="-fx-font-size: 14px; -fx-text-fill: #B0BEC5;"/>
+    <Label text="Maroc - Espagne - Portugal" style="-fx-font-size: 12px; -fx-text-fill: #90CAF9;"/>
+    <VBox alignment="CENTER" spacing="15"
+          style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 30;">
+        <Label text="Connexion" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #1a237e;"/>
+        <VBox spacing="5" alignment="CENTER_LEFT">
+            <Label text="Nom d'utilisateur" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+            <TextField fx:id="usernameField" promptText="Entrez votre identifiant" prefWidth="280"/>
+        </VBox>
+        <VBox spacing="5" alignment="CENTER_LEFT">
+            <Label text="Mot de passe" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+            <PasswordField fx:id="passwordField" promptText="Entrez votre mot de passe" prefWidth="280"/>
+        </VBox>
+        <Label fx:id="errorLabel" text="" style="-fx-text-fill: red; -fx-font-size: 12px;"/>
+        <Button text="Se connecter" onAction="#handleLogin" prefWidth="280" prefHeight="40"
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;"/>
+        <Separator/>
+        <Label text="Pas encore de compte?" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+        <Button text="Creer un compte" onAction="#handleRegister" prefWidth="280" prefHeight="35"
+                style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 13px; -fx-cursor: hand;"/>
+        <Separator/>
+        <Label text="Comptes demo:" style="-fx-font-size: 11px; -fx-text-fill: #999;"/>
+        <HBox spacing="20" alignment="CENTER">
+            <VBox alignment="CENTER" spacing="2">
+                <Label text="Admin" style="-fx-font-size: 11px; -fx-font-weight: bold;"/>
+                <Label text="admin / admin123" style="-fx-font-size: 10px; -fx-text-fill: #666;"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="2">
+                <Label text="User" style="-fx-font-size: 11px; -fx-font-weight: bold;"/>
+                <Label text="user / user123" style="-fx-font-size: 10px; -fx-text-fill: #666;"/>
+            </VBox>
+        </HBox>
+    </VBox>
+    <Label text="2030 FIFA World Cup" style="-fx-font-size: 11px; -fx-text-fill: #B0BEC5;"/>
+</VBox>

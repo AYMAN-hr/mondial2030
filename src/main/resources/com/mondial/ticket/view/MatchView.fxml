@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<VBox spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="com.mondial.ticket.view.MatchController">
+    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+    <Label text="Matchs du Mondial 2030" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    <HBox fx:id="adminMatchSection" spacing="10" alignment="CENTER_LEFT" style="-fx-background-color: #FFF3E0; -fx-padding: 10;">
+        <Label text="Admin:" style="-fx-font-weight: bold; -fx-text-fill: #FF5722;"/>
+        <TextField fx:id="equipe1Field" promptText="Equipe 1" prefWidth="90"/>
+        <Label text="VS" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="equipe2Field" promptText="Equipe 2" prefWidth="90"/>
+        <TextField fx:id="stadeField" promptText="Stade" prefWidth="100"/>
+        <TextField fx:id="villeField" promptText="Ville" prefWidth="80"/>
+        <ComboBox fx:id="paysCombo"/>
+        <ComboBox fx:id="phaseCombo"/>
+        <Button text="Ajouter" onAction="#handleAjouterMatch" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+    </HBox>
+    <TableView fx:id="matchTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+            <TableColumn fx:id="colEquipe1" text="Equipe 1" prefWidth="100"/>
+            <TableColumn fx:id="colEquipe2" text="Equipe 2" prefWidth="100"/>
+            <TableColumn fx:id="colStade" text="Stade" prefWidth="150"/>
+            <TableColumn fx:id="colVille" text="Ville" prefWidth="100"/>
+            <TableColumn fx:id="colPays" text="Pays" prefWidth="80"/>
+            <TableColumn fx:id="colPhase" text="Phase" prefWidth="100"/>
+        </columns>
+    </TableView>
+    <HBox spacing="10">
+        <Button text="Rafraichir" onAction="#handleRefresh"/>
+        <Button text="Details" onAction="#handleVoirDetails" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+        <Button fx:id="statsMatchBtn" text="Stats" onAction="#handleStatistiquesPays" style="-fx-background-color: #9C27B0; -fx-text-fill: white;"/>
+        <Button fx:id="deleteMatchBtn" text="Supprimer" onAction="#handleSupprimerMatch" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+    </HBox>
+</VBox>

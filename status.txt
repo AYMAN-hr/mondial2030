@@ -1,0 +1,3 @@
+﻿CONTAINER ID   IMAGE           COMMAND                  CREATED              STATUS                        PORTS                                         NAMES
+c4e8799b4dbf   mariadb:10.11   "docker-entrypoint.sΓÇª"   About a minute ago   Up About a minute (healthy)   0.0.0.0:3306->3306/tcp, [::]:3306->3306/tcp   mysql_mondial2030
+e471fd614226   mysql:8.0       "docker-entrypoint.sΓÇª"   4 minutes ago        Exited (255) 4 minutes ago                                                  test_mysql

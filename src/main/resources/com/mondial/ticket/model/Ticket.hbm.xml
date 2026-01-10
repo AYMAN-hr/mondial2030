@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.mondial.ticket.model">
+    <class name="Ticket" table="tickets">
+        <id name="id" column="id" type="int">
+            <generator class="native"/>
+        </id>
+        <property name="nomMatch" column="nom_match" type="string" length="200"/>
+        <property name="categorie" column="categorie" type="string" length="50"/>
+        <property name="prix" column="prix" type="double"/>
+        <property name="status" column="status" type="string" length="20"/>
+        <property name="acheteur" column="acheteur" type="string" length="100"/>
+
+        <!-- Many-to-One relationship back to Match -->
+        <many-to-one name="match" column="match_id" class="Match" />
+    </class>
+</hibernate-mapping>
+

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.mondial.ticket.view.MainController">
+    <top>
+        <VBox>
+            <MenuBar>
+                <Menu text="Fichier">
+                    <MenuItem fx:id="exportDataMenuItem" text="📁 Exporter données" onAction="#handleExportData"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="🚪 Déconnexion" onAction="#handleLogout"/>
+                    <MenuItem text="Quitter" onAction="#handleExit"/>
+                </Menu>
+                <Menu text="Mon Compte">
+                    <MenuItem text="🎫 Mes Tickets" onAction="#handleMyTickets"/>
+                    <MenuItem text="⭐ Mes Favoris" onAction="#handleFavorites"/>
+                    <MenuItem text="🔄 Demander remboursement" onAction="#handleRefundRequest"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="🔐 Changer mot de passe" onAction="#handleChangePassword"/>
+                </Menu>
+                <Menu text="Outils">
+                    <MenuItem text="🎲 Tirage au sort" onAction="#handleLottery"/>
+                    <MenuItem text="💳 Simulation paiement" onAction="#handlePaymentSimulation"/>
+                    <MenuItem fx:id="promoCodesMenuItem" text="🎁 Gérer codes promo" onAction="#handlePromoCodes"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="🔔 Notifications" onAction="#handleNotifications"/>
+                    <MenuItem text="💬 Chat Support" onAction="#handleChatSupport"/>
+                </Menu>
+                <Menu fx:id="adminMenu" text="👑 Admin">
+                    <MenuItem text="👥 Gérer utilisateurs" onAction="#handleManageUsers"/>
+                    <MenuItem text="🔄 Réinitialiser données" onAction="#handleResetMockData"/>
+                </Menu>
+                <Menu text="Affichage">
+                    <CheckMenuItem fx:id="darkModeToggle" text="🌙 Mode sombre" onAction="#handleDarkMode"/>
+                    <SeparatorMenuItem/>
+                    <Menu text="🌐 Langue">
+                        <MenuItem text="🇫🇷 Français" onAction="#handleLanguageFR"/>
+                        <MenuItem text="🇬🇧 English" onAction="#handleLanguageEN"/>
+                        <MenuItem text="🇲🇦 العربية" onAction="#handleLanguageAR"/>
+                    </Menu>
+                </Menu>
+                <Menu text="Aide">
+                    <MenuItem text="📖 Guide utilisateur" onAction="#handleUserGuide"/>
+                    <MenuItem text="À propos" onAction="#handleAbout"/>
+                </Menu>
+            </MenuBar>
+        </VBox>
+    </top>
+    <center>
+        <VBox spacing="10" fx:id="mainContainer">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <Label text="🏆 Plateforme Intelligente de Gestion des Tickets - Mondial 2030"
+                       style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2E7D32;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="🔔" onAction="#handleNotifications" style="-fx-background-radius: 15; -fx-cursor: hand;"/>
+                <Label fx:id="userLabel" text="" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #1565C0;"/>
+                <Label fx:id="clockLabel" style="-fx-font-size: 14px;"/>
+            </HBox>
+            <Label text="Pays hôtes : Maroc 🇲🇦 | Espagne 🇪🇸 | Portugal 🇵🇹"
+                   style="-fx-font-size: 14px; -fx-text-fill: #666;"/>
+
+            <!-- Quick Stats Bar -->
+            <HBox spacing="20" style="-fx-background-color: #E3F2FD; -fx-padding: 10; -fx-background-radius: 5;">
+                <Label fx:id="totalTicketsLabel" text="📊 Total: 0" style="-fx-font-weight: bold;"/>
+                <Label fx:id="soldTicketsLabel" text="🎫 Vendus: 0" style="-fx-font-weight: bold; -fx-text-fill: green;"/>
+                <Label fx:id="availableTicketsLabel" text="✅ Disponibles: 0" style="-fx-font-weight: bold; -fx-text-fill: blue;"/>
+                <Label fx:id="revenueLabel" text="💰 Revenus: 0€" style="-fx-font-weight: bold; -fx-text-fill: #FF9800;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="🔄" onAction="#handleRefreshStats" style="-fx-background-radius: 15;"/>
+            </HBox>
+
+            <TabPane VBox.vgrow="ALWAYS">
+                <tabs>
+                    <Tab text="🎟️ Tickets" closable="false">
+                        <fx:include source="TicketView.fxml"/>
+                    </Tab>
+                    <Tab text="⚽ Matchs" closable="false">
+                        <fx:include source="MatchView.fxml"/>
+                    </Tab>
+                </tabs>
+            </TabPane>
+        </VBox>
+    </center>
+    <bottom>
+        <HBox style="-fx-background-color: #263238; -fx-padding: 5;" spacing="20" alignment="CENTER">
+            <Label text="© 2030 FIFA World Cup - Maroc, Espagne, Portugal" style="-fx-text-fill: white; -fx-font-size: 11px;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="notificationLabel" text="" style="-fx-text-fill: #4CAF50; -fx-font-size: 11px;"/>
+        </HBox>
+    </bottom>
+</BorderPane>
+

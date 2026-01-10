@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!-- Database connection settings (MySQL) -->
+        <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="connection.url">jdbc:mysql://localhost:3306/mondial2030</property>
+        <property name="connection.username">root</property>
+        <property name="connection.password">mondial2030</property>
+
+        <!-- SQL dialect (MariaDB is MySQL-compatible) -->
+        <property name="dialect">org.hibernate.dialect.MariaDBDialect</property>
+
+        <!-- Echo all executed SQL to stdout -->
+        <property name="show_sql">true</property>
+        <property name="format_sql">true</property>
+
+        <!-- Drop and re-create the database schema on startup -->
+        <property name="hbm2ddl.auto">update</property>
+
+        <!-- Mapping files -->
+        <mapping resource="com/mondial/ticket/model/Ticket.hbm.xml"/>
+        <mapping resource="com/mondial/ticket/model/Match.hbm.xml"/>
+        <mapping resource="com/mondial/ticket/model/User.hbm.xml"/>
+    </session-factory>
+</hibernate-configuration>
+

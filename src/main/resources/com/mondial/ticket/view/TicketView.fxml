@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<VBox spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="com.mondial.ticket.view.TicketController">
+    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+    <Label text="Billetterie du Mondial 2030" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    <HBox fx:id="adminAddSection" spacing="10" alignment="CENTER_LEFT" style="-fx-background-color: #FFF3E0; -fx-padding: 10;">
+        <Label text="Admin:" style="-fx-font-weight: bold; -fx-text-fill: #FF5722;"/>
+        <TextField fx:id="nomMatchField" promptText="Match" prefWidth="180"/>
+        <ComboBox fx:id="categorieCombo"/>
+        <TextField fx:id="prixField" promptText="Prix" prefWidth="70"/>
+        <Button fx:id="addTicketBtn" text="Ajouter" onAction="#handleAjouterTicket" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+    </HBox>
+    <Separator/>
+    <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-background-color: #E3F2FD; -fx-padding: 10;">
+        <Label text="Choisir un match:" style="-fx-font-weight: bold;"/>
+        <ComboBox fx:id="matchCombo" promptText="Selectionner un match" prefWidth="220"/>
+        <Label text="Categorie:"/>
+        <ComboBox fx:id="userCategorieCombo" prefWidth="100"/>
+        <Button text="Voir Tous" onAction="#handleShowAll" style="-fx-background-color: #607D8B; -fx-text-fill: white;"/>
+    </HBox>
+    <Label text="Selectionnez un ticket et cliquez sur Acheter (ou double-cliquez)" style="-fx-font-size: 11px; -fx-text-fill: #666; -fx-font-style: italic;"/>
+    <TableView fx:id="ticketTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colNomMatch" text="Match" prefWidth="200"/>
+            <TableColumn fx:id="colCategorie" text="Categorie" prefWidth="100"/>
+            <TableColumn fx:id="colPrix" text="Prix (EUR)" prefWidth="80"/>
+            <TableColumn fx:id="colStatus" text="Statut" prefWidth="100"/>
+            <TableColumn fx:id="colAcheteur" text="Acheteur" prefWidth="120"/>
+        </columns>
+    </TableView>
+    <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-background-color: #E8F5E9; -fx-padding: 10;">
+        <Label text="Acheter le ticket selectionne:" style="-fx-font-weight: bold; -fx-text-fill: #2E7D32;"/>
+        <Button text="Acheter" onAction="#handleBuySelectedTicket" style="-fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20;"/>
+        <Label fx:id="acheteurLabel" text="" style="-fx-font-style: italic; -fx-text-fill: #666;"/>
+    </HBox>
+    <Separator/>
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Recherche:" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="searchField" promptText="Rechercher..." prefWidth="200"/>
+        <Button text="Rechercher" onAction="#handleSearch" style="-fx-background-color: #9C27B0; -fx-text-fill: white;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="deleteTicketBtn" text="Supprimer" onAction="#handleSupprimerTicket" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+        <Button fx:id="statsBtn" text="Stats" onAction="#handleStatistiques" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+        <Button fx:id="exportAllBtn" text="Export" onAction="#handleExportAll" style="-fx-background-color: #795548; -fx-text-fill: white;"/>
+    </HBox>
+    <Label fx:id="statusLabel" text="" style="-fx-text-fill: #666666; -fx-font-weight: bold;"/>
+</VBox>

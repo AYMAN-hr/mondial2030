@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.mondial.ticket.model">
+    <class name="Match" table="matchs">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="equipe1" column="equipe1" type="string" length="100"/>
+        <property name="equipe2" column="equipe2" type="string" length="100"/>
+        <property name="stade" column="stade" type="string" length="200"/>
+        <property name="ville" column="ville" type="string" length="100"/>
+        <property name="pays" column="pays" type="string" length="50"/>
+        <property name="phase" column="phase" type="string" length="50"/>
+
+        <!-- One-to-Many relationship with Ticket -->
+        <set name="tickets" cascade="all-delete-orphan" inverse="true" lazy="false">
+            <key column="match_id"/>
+            <one-to-many class="Ticket"/>
+        </set>
+    </class>
+</hibernate-mapping>
+
