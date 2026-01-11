@@ -4,6 +4,7 @@ import com.mondial.ticket.dao.MatchDaoHibernate;
 import com.mondial.ticket.dao.TicketDaoHibernate;
 import com.mondial.ticket.exception.TicketException;
 import com.mondial.ticket.model.Match;
+import com.mondial.ticket.model.PurchasedTicket;
 import com.mondial.ticket.model.Ticket;
 import com.mondial.ticket.service.AuthService;
 import com.mondial.ticket.service.MatchService;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
  */
 public class TicketController {
     @FXML
-    private TextField nomMatchField;
+    private ComboBox<String> adminMatchCombo;
     @FXML
     private ComboBox<String> categorieCombo;
     @FXML
@@ -41,6 +42,8 @@ public class TicketController {
     private TextField prixField;
     @FXML
     private TextField searchField;
+    @FXML
+    private TextField acheteurField;
     @FXML
     private TableView<Ticket> ticketTable;
     @FXML
@@ -132,6 +135,9 @@ public class TicketController {
             categorieCombo.setValue("Standard");
         }
 
+        // Charger les matchs existants dans le combo box admin
+        loadAdminMatchCombo();
+
         // Configuration du ComboBox des catégories (user)
         if (userCategorieCombo != null) {
             userCategorieCombo.setItems(FXCollections.observableArrayList("Tous", "VIP", "Standard", "Tribune"));
@@ -149,6 +155,13 @@ public class TicketController {
             matchCombo.setOnAction(e -> filterTicketsByMatchAndCategory());
         }
 
+        // Add dynamic search - filter as you type
+        if (searchField != null) {
+            searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+                performDynamicSearch(newValue);
+            });
+        }
+
         // Show logged-in user's name
         if (acheteurLabel != null && authService.getCurrentUser() != null) {
             String nom = authService.getCurrentUser().getNom();
@@ -160,6 +173,32 @@ public class TicketController {
 
         handleRefresh();
         updateStatus("Bienvenue! " + ticketList.size() + " tickets disponibles.");
+    }
+
+    /**
+     * Perform dynamic search as user types
+     */
+    private void performDynamicSearch(String searchTerm) {
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
+            // Show all tickets when search is empty
+            ticketList.setAll(ticketService.recupererTout());
+            ticketTable.setItems(ticketList);
+            updateStatus("🎫 " + ticketList.size() + " tickets affichés");
+            return;
+        }
+
+        String term = searchTerm.toLowerCase().trim();
+        List<Ticket> filtered = ticketService.recupererTout().stream()
+                .filter(t -> t.getNomMatch().toLowerCase().contains(term)
+                        || t.getCategorie().toLowerCase().contains(term)
+                        || (t.getStatus() != null && t.getStatus().toLowerCase().contains(term))
+                        || (t.getAcheteur() != null && t.getAcheteur().toLowerCase().contains(term))
+                        || String.valueOf(t.getPrix()).contains(term))
+                .collect(Collectors.toList());
+
+        ticketList.setAll(filtered);
+        ticketTable.setItems(ticketList);
+        updateStatus("🔍 " + filtered.size() + " résultat(s) pour '" + searchTerm + "'");
     }
 
     /**
@@ -199,13 +238,13 @@ public class TicketController {
     }
 
     /**
-     * Charger les matchs disponibles dans le combo box (depuis les tickets)
+     * Charger les matchs disponibles dans le combo box (depuis la table Match)
      */
     private void loadMatchesIntoCombo() {
         if (matchCombo != null) {
-            // Get unique match names from tickets
-            List<String> matchNames = ticketService.recupererTout().stream()
-                .map(Ticket::getNomMatch)
+            // Get match names from Match table (created by admin)
+            List<String> matchNames = matchService.listerMatchs().stream()
+                .map(Match::getNomComplet)
                 .distinct()
                 .sorted()
                 .collect(Collectors.toList());
@@ -218,6 +257,28 @@ public class TicketController {
                 matchCombo.setValue(currentSelection);
             }
             // Don't auto-select first match - let user choose
+        }
+    }
+
+    /**
+     * Charger les matchs existants dans le combo box admin (pour ajouter des tickets)
+     */
+    private void loadAdminMatchCombo() {
+        if (adminMatchCombo != null) {
+            // Get match names from Match table (created by admin)
+            List<String> matchNames = matchService.listerMatchs().stream()
+                .map(Match::getNomComplet)
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
+
+            String currentSelection = adminMatchCombo.getValue();
+            adminMatchCombo.setItems(FXCollections.observableArrayList(matchNames));
+
+            // Restore selection if it still exists
+            if (currentSelection != null && matchNames.contains(currentSelection)) {
+                adminMatchCombo.setValue(currentSelection);
+            }
         }
     }
 
@@ -261,12 +322,12 @@ public class TicketController {
         }
 
         try {
-            String nomMatch = nomMatchField.getText();
+            String nomMatch = adminMatchCombo.getValue();
             String categorie = categorieCombo.getValue();
             double prix = Double.parseDouble(prixField.getText());
 
-            if (nomMatch.isEmpty()) {
-                showAlert("Erreur", "Veuillez entrer le nom du match.");
+            if (nomMatch == null || nomMatch.isEmpty()) {
+                showAlert("Erreur", "Veuillez sélectionner un match existant.");
                 return;
             }
 
@@ -275,9 +336,8 @@ public class TicketController {
             handleRefresh();
 
             // Clear fields
-            nomMatchField.clear();
             prixField.clear();
-            updateStatus("✅ Ticket ajouté avec succès: " + nomMatch);
+            updateStatus("✅ Ticket ajouté avec succès: " + nomMatch + " [" + categorie + "]");
         } catch (NumberFormatException e) {
             showAlert("Erreur", "Prix invalide. Veuillez entrer un nombre.");
         } catch (Exception e) {
@@ -290,6 +350,7 @@ public class TicketController {
         ticketList.setAll(ticketService.recupererTout());
         ticketTable.setItems(ticketList);
         loadMatchesIntoCombo();
+        loadAdminMatchCombo();
         updateStatus("🔄 Liste actualisée - " + ticketList.size() + " tickets");
     }
 
@@ -357,39 +418,27 @@ public class TicketController {
 
     @FXML
     public void handleAcheterTicket() {
-        // Use logged-in user's info
-        if (authService.getCurrentUser() == null) {
-            showAlert("Erreur", "Vous devez être connecté pour acheter un ticket.");
+        String acheteur = acheteurField.getText().trim();
+        if (acheteur.isEmpty()) {
+            showAlert("Attention", "Veuillez entrer votre nom.");
             return;
-        }
-
-        String acheteur = authService.getCurrentUser().getNom();
-        if (acheteur == null || acheteur.isEmpty()) {
-            acheteur = authService.getCurrentUser().getUsername();
         }
 
         // Try to get match from combo box first (user flow)
         if (matchCombo != null && matchCombo.getValue() != null && !matchCombo.getValue().isEmpty()) {
             final String selectedMatch = matchCombo.getValue();
-            String selectedCategorie = (userCategorieCombo != null && userCategorieCombo.getValue() != null)
+            final String selectedCategorie = (userCategorieCombo != null && userCategorieCombo.getValue() != null)
                 ? userCategorieCombo.getValue() : "Standard";
-
-            // If "Tous" is selected, use "Standard" as default
-            if ("Tous".equals(selectedCategorie)) {
-                selectedCategorie = "Standard";
-            }
-
-            final String finalCategorie = selectedCategorie;
 
             // Find an available ticket for this match and category
             List<Ticket> availableTickets = ticketService.recupererTout().stream()
                 .filter(t -> t.getNomMatch().equals(selectedMatch)
-                        && t.getCategorie().equals(finalCategorie)
+                        && t.getCategorie().equals(selectedCategorie)
                         && "DISPONIBLE".equals(t.getStatus()))
                 .collect(Collectors.toList());
 
             if (availableTickets.isEmpty()) {
-                showAlert("Désolé", "Aucun ticket disponible pour:\n" + selectedMatch + " (" + finalCategorie + ")");
+                showAlert("Désolé", "Aucun ticket disponible pour:\n" + selectedMatch + " (" + selectedCategorie + ")");
                 return;
             }
 
@@ -411,7 +460,31 @@ public class TicketController {
             return;
         }
 
-        buyTicket(selected, acheteur);
+        try {
+            ticketService.acheterTicket(selected.getNomMatch(), acheteur);
+
+            // Record purchase for user
+            UserTicketService userTicketService = UserTicketService.getInstance();
+            PurchasedTicket purchase = userTicketService.recordPurchase(acheteur, selected);
+
+            handleRefresh();
+            acheteurField.clear();
+
+            // Show confirmation with QR code
+            showInfo("🎫 Achat confirmé!",
+                    "Félicitations " + acheteur + "!\n\n" +
+                    "Vous avez acheté:\n" +
+                    "Match: " + selected.getNomMatch() + "\n" +
+                    "Catégorie: " + selected.getCategorie() + "\n" +
+                    "Prix: " + selected.getPrix() + "€\n\n" +
+                    "🎟️ ID Ticket: " + purchase.getTicketId() + "\n" +
+                    "📱 Code QR: " + purchase.getQrCode() + "\n\n" +
+                    "Merci pour votre achat! 🏆");
+
+            updateStatus("🎫 Ticket vendu à " + acheteur);
+        } catch (Exception e) {
+            showAlert("Erreur", "Erreur lors de l'achat: " + e.getMessage());
+        }
     }
 
     /**
@@ -425,7 +498,7 @@ public class TicketController {
             UserTicketService userTicketService = UserTicketService.getInstance();
             String username = authService.getCurrentUser() != null ?
                 authService.getCurrentUser().getUsername() : acheteur;
-            UserTicketService.PurchasedTicket purchase = userTicketService.recordPurchase(username, ticket);
+            PurchasedTicket purchase = userTicketService.recordPurchase(username, ticket);
 
             handleRefresh();
             loadMatchesIntoCombo(); // Refresh matches

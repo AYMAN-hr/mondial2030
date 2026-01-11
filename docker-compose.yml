@@ -3,12 +3,12 @@ version: '3.8'
 services:
   db:
     image: mariadb:10.11
-    container_name: mysql_mondial2030
+    container_name: mariadb_mondial2030
     environment:
       MARIADB_ROOT_PASSWORD: mondial2030
       MARIADB_DATABASE: mondial2030
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql
       - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
     ports:
       - "3306:3306"
@@ -29,5 +29,5 @@ services:
         condition: service_healthy
 
 volumes:
-  mysql_data:
+  mariadb_data:
 

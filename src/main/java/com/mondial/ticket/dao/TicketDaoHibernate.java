@@ -115,13 +115,32 @@ public class TicketDaoHibernate implements IDao<Ticket> {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            session.createQuery("delete from Ticket").executeUpdate();
+            session.createMutationQuery("delete from Ticket").executeUpdate();
             transaction.commit();
             System.out.println("Hibernate: Tous les tickets supprimés");
         } catch (Exception e) {
             if (transaction != null)
                 transaction.rollback();
             System.err.println("Erreur Hibernate (suppression tout) : " + e.getMessage());
+        }
+    }
+
+    /**
+     * Delete all tickets for a specific match
+     */
+    public void deleteByMatch(String nomMatch) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            int deleted = session.createMutationQuery("delete from Ticket where nomMatch = :nom")
+                    .setParameter("nom", nomMatch)
+                    .executeUpdate();
+            transaction.commit();
+            System.out.println("Hibernate: " + deleted + " tickets supprimés pour le match -> " + nomMatch);
+        } catch (Exception e) {
+            if (transaction != null)
+                transaction.rollback();
+            System.err.println("Erreur Hibernate (suppression par match) : " + e.getMessage());
         }
     }
 }

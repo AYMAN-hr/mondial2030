@@ -4,9 +4,9 @@
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
-        <!-- Database connection settings (MySQL) -->
-        <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-        <property name="connection.url">jdbc:mysql://localhost:3306/mondial2030</property>
+        <!-- Database connection settings (MariaDB) -->
+        <property name="connection.driver_class">org.mariadb.jdbc.Driver</property>
+        <property name="connection.url">jdbc:mariadb://localhost:3306/mondial2030</property>
         <property name="connection.username">root</property>
         <property name="connection.password">mondial2030</property>
 
@@ -24,6 +24,7 @@
         <mapping resource="com/mondial/ticket/model/Ticket.hbm.xml"/>
         <mapping resource="com/mondial/ticket/model/Match.hbm.xml"/>
         <mapping resource="com/mondial/ticket/model/User.hbm.xml"/>
+        <mapping resource="com/mondial/ticket/model/PurchasedTicket.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>
 

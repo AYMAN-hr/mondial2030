@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.mondial.ticket.model.PurchasedTicket" table="purchased_tickets">
+        <id name="id" column="id">
+            <generator class="identity"/>
+        </id>
+        <property name="ticketId" column="ticket_id"/>
+        <property name="username" column="username"/>
+        <property name="matchName" column="match_name"/>
+        <property name="category" column="category"/>
+        <property name="price" column="price"/>
+        <property name="purchaseDate" column="purchase_date"/>
+        <property name="qrCode" column="qr_code"/>
+        <property name="status" column="status"/>
+        <property name="originalTicketId" column="original_ticket_id"/>
+    </class>
+</hibernate-mapping>
+

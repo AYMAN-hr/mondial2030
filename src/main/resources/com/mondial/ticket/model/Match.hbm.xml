@@ -14,9 +14,9 @@
         <property name="pays" column="pays" type="string" length="50"/>
         <property name="phase" column="phase" type="string" length="50"/>
 
-        <!-- One-to-Many relationship with Ticket -->
-        <set name="tickets" cascade="all-delete-orphan" inverse="true" lazy="false">
-            <key column="match_id"/>
+        <!-- One-to-Many relationship with Ticket - cascade delete when match is deleted -->
+        <set name="tickets" cascade="all-delete-orphan" inverse="true" lazy="false" fetch="join">
+            <key column="match_id" on-delete="cascade"/>
             <one-to-many class="Ticket"/>
         </set>
     </class>

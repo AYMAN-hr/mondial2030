@@ -1,7 +1,6 @@
 package com.mondial.ticket.service;
 
 import com.mondial.ticket.dao.IDao;
-import com.mondial.ticket.dao.TicketDaoHibernate;
 import com.mondial.ticket.exception.TicketException;
 import com.mondial.ticket.model.Ticket;
 import java.util.List;
@@ -136,16 +135,12 @@ public class TicketService {
      * Supprimer tous les tickets
      */
     public void supprimerTout() {
-        if (dao instanceof TicketDaoHibernate) {
-            ((TicketDaoHibernate) dao).deleteAll();
-        } else {
-            List<Ticket> tickets = dao.readAll();
-            for (Ticket t : tickets) {
-                try {
-                    dao.delete(t.getNomMatch());
-                } catch (Exception e) {
-                    System.err.println("Erreur suppression: " + e.getMessage());
-                }
+        List<Ticket> tickets = dao.readAll();
+        for (Ticket t : tickets) {
+            try {
+                dao.delete(t.getNomMatch());
+            } catch (Exception e) {
+                System.err.println("Erreur suppression: " + e.getMessage());
             }
         }
         System.out.println("✅ Tous les tickets ont été supprimés.");

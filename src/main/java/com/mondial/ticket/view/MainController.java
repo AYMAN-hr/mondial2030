@@ -1,6 +1,7 @@
 package com.mondial.ticket.view;
 
 import com.mondial.ticket.dao.TicketDaoHibernate;
+import com.mondial.ticket.model.PurchasedTicket;
 import com.mondial.ticket.model.Ticket;
 import com.mondial.ticket.model.User;
 import com.mondial.ticket.service.AuthService;
@@ -741,7 +742,7 @@ public class MainController {
         if (user == null) return;
 
         UserTicketService userTicketService = UserTicketService.getInstance();
-        List<UserTicketService.PurchasedTicket> myTickets = userTicketService.getUserTickets(user.getUsername());
+        List<PurchasedTicket> myTickets = userTicketService.getUserTickets(user.getUsername());
 
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("🎫 Mes Tickets");
@@ -754,7 +755,7 @@ public class MainController {
             content.getChildren().add(new Label("Vous n'avez pas encore acheté de tickets."));
         } else {
             ListView<String> ticketList = new ListView<>();
-            for (UserTicketService.PurchasedTicket t : myTickets) {
+            for (PurchasedTicket t : myTickets) {
                 String status = t.getStatus();
                 String icon;
                 switch (status) {
@@ -765,7 +766,7 @@ public class MainController {
                 }
                 String statusText = "WON".equals(status) ? " (GAGNÉ AU TIRAGE)" : "";
                 ticketList.getItems().add(icon + " " + t.getMatchName() + " [" + t.getCategory() + "] - " +
-                    t.getPrice() + "€" + statusText + " | QR: " + t.getQrCode() + " | " + t.getPurchaseDate());
+                    t.getPrice() + "€" + statusText + " | QR: " + t.getQrCode() + " | " + t.getPurchaseDateFormatted());
             }
 
             double totalSpent = userTicketService.getTotalSpent(user.getUsername());
@@ -817,7 +818,7 @@ public class MainController {
         if (user == null) return;
 
         UserTicketService userTicketService = UserTicketService.getInstance();
-        List<UserTicketService.PurchasedTicket> validTickets = userTicketService.getValidTickets(user.getUsername());
+        List<PurchasedTicket> validTickets = userTicketService.getValidTickets(user.getUsername());
 
         if (validTickets.isEmpty()) {
             showAlert("Remboursement", "Vous n'avez aucun ticket valide à rembourser.");
@@ -832,7 +833,7 @@ public class MainController {
         content.setPadding(new Insets(20));
 
         ComboBox<String> ticketCombo = new ComboBox<>();
-        for (UserTicketService.PurchasedTicket t : validTickets) {
+        for (PurchasedTicket t : validTickets) {
             ticketCombo.getItems().add(t.getTicketId() + " - " + t.getMatchName() + " (" + t.getPrice() + "€)");
         }
         ticketCombo.getSelectionModel().selectFirst();
@@ -858,7 +859,7 @@ public class MainController {
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             int selectedIndex = ticketCombo.getSelectionModel().getSelectedIndex();
-            UserTicketService.PurchasedTicket selected = validTickets.get(selectedIndex);
+            PurchasedTicket selected = validTickets.get(selectedIndex);
 
             if (userTicketService.requestRefund(user.getUsername(), selected.getTicketId())) {
                 showNotification("✅ Demande de remboursement soumise pour " + selected.getMatchName());

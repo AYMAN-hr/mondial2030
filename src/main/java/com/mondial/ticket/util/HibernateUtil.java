@@ -14,10 +14,13 @@ public class HibernateUtil {
             // Load configuration from hibernate.cfg.xml
             Configuration configuration = new Configuration().configure();
 
-            // Use DB_HOST environment variable if set (for Docker), otherwise use localhost
-            String dbHost = System.getenv("DB_HOST") != null ? System.getenv("DB_HOST") : "localhost";
-            String url = "jdbc:mysql://" + dbHost + ":3306/mondial2030";
-            configuration.setProperty("hibernate.connection.url", url);
+            // Only override URL if DB_HOST environment variable is set (for Docker)
+            String dbHost = System.getenv("DB_HOST");
+            if (dbHost != null) {
+                String url = "jdbc:mariadb://" + dbHost + ":3306/mondial2030";
+                configuration.setProperty("hibernate.connection.url", url);
+            }
+            // Otherwise, use the settings from hibernate.cfg.xml
 
             return configuration.buildSessionFactory();
         } catch (Throwable ex) {

@@ -150,4 +150,3 @@ Développé pour le projet Mondial 2030.
 ---
 
 *Coupe du Monde 2030 - Maroc 🇲🇦 | Espagne 🇪🇸 | Portugal 🇵🇹*
-

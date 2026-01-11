@@ -72,7 +72,14 @@ public class MatchDaoHibernate implements IDao<Match> {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            // Query in the same session to avoid detached entity issues
+
+            // First, delete all tickets associated with this match
+            int ticketsDeleted = session.createMutationQuery("delete from Ticket where nomMatch = :nom")
+                    .setParameter("nom", nomComplet)
+                    .executeUpdate();
+            System.out.println("Hibernate: " + ticketsDeleted + " tickets supprimés pour le match -> " + nomComplet);
+
+            // Then delete the match itself
             Match m = session.createQuery("from Match where concat(equipe1, ' vs ', equipe2) = :nom", Match.class)
                     .setParameter("nom", nomComplet)
                     .uniqueResult();

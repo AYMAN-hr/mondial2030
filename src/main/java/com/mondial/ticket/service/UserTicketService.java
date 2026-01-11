@@ -1,61 +1,21 @@
 package com.mondial.ticket.service;
 
+import com.mondial.ticket.dao.PurchasedTicketDao;
+import com.mondial.ticket.model.PurchasedTicket;
 import com.mondial.ticket.model.Ticket;
-import com.mondial.ticket.model.User;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * Service pour gérer l'historique des achats des utilisateurs.
+ * Utilise la base de données pour la persistance.
  */
 public class UserTicketService {
 
     private static UserTicketService instance;
-    private Map<String, List<PurchasedTicket>> userPurchases = new HashMap<>();
+    private PurchasedTicketDao purchasedTicketDao = new PurchasedTicketDao();
     private Set<String> favoriteMatches = new HashSet<>();
-
-    public static class PurchasedTicket {
-        private String ticketId;
-        private String matchName;
-        private String category;
-        private double price;
-        private String purchaseDate;
-        private String qrCode;
-        private String status; // VALID, USED, REFUNDED
-
-        public PurchasedTicket(Ticket ticket) {
-            this.ticketId = "TKT-" + System.currentTimeMillis();
-            this.matchName = ticket.getNomMatch();
-            this.category = ticket.getCategorie();
-            this.price = ticket.getPrix();
-            this.purchaseDate = LocalDateTime.now()
-                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-            this.qrCode = generateQRCode();
-            this.status = "VALID";
-        }
-
-        private String generateQRCode() {
-            // Simulate QR code as a unique string
-            return "QR-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-        }
-
-        public String getTicketId() { return ticketId; }
-        public String getMatchName() { return matchName; }
-        public String getCategory() { return category; }
-        public double getPrice() { return price; }
-        public String getPurchaseDate() { return purchaseDate; }
-        public String getQrCode() { return qrCode; }
-        public String getStatus() { return status; }
-        public void setStatus(String status) { this.status = status; }
-
-        @Override
-        public String toString() {
-            return ticketId + " | " + matchName + " [" + category + "] - " + price + "€";
-        }
-    }
 
     private UserTicketService() {}
 
@@ -68,13 +28,11 @@ public class UserTicketService {
 
     /**
      * Enregistrer un achat de ticket pour un utilisateur
+     * Les données sont persistées en base de données
      */
     public PurchasedTicket recordPurchase(String username, Ticket ticket) {
-        PurchasedTicket purchase = new PurchasedTicket(ticket);
-
-        userPurchases.computeIfAbsent(username, k -> new ArrayList<>());
-        userPurchases.get(username).add(purchase);
-
+        PurchasedTicket purchase = new PurchasedTicket(username, ticket);
+        purchasedTicketDao.create(purchase);
         return purchase;
     }
 
@@ -82,28 +40,24 @@ public class UserTicketService {
      * Obtenir tous les tickets achetés par un utilisateur
      */
     public List<PurchasedTicket> getUserTickets(String username) {
-        return userPurchases.getOrDefault(username, new ArrayList<>());
+        return purchasedTicketDao.findByUsername(username);
     }
 
     /**
      * Obtenir les tickets valides d'un utilisateur
      */
     public List<PurchasedTicket> getValidTickets(String username) {
-        return getUserTickets(username).stream()
-            .filter(t -> "VALID".equals(t.getStatus()))
-            .collect(Collectors.toList());
+        return purchasedTicketDao.findValidByUsername(username);
     }
 
     /**
      * Demander un remboursement
      */
     public boolean requestRefund(String username, String ticketId) {
-        List<PurchasedTicket> tickets = getUserTickets(username);
-        for (PurchasedTicket t : tickets) {
-            if (t.getTicketId().equals(ticketId) && "VALID".equals(t.getStatus())) {
-                t.setStatus("REFUNDED");
-                return true;
-            }
+        PurchasedTicket ticket = purchasedTicketDao.findByTicketId(ticketId);
+        if (ticket != null && ticket.getUsername().equals(username) && "VALID".equals(ticket.getStatus())) {
+            ticket.setStatus("REFUNDED");
+            return purchasedTicketDao.update(ticket);
         }
         return false;
     }
@@ -140,24 +94,33 @@ public class UserTicketService {
      * Obtenir le total dépensé par un utilisateur
      */
     public double getTotalSpent(String username) {
-        return getUserTickets(username).stream()
-            .filter(t -> !"REFUNDED".equals(t.getStatus()))
-            .mapToDouble(PurchasedTicket::getPrice)
-            .sum();
+        return purchasedTicketDao.getTotalSpentByUsername(username);
     }
 
     /**
      * Enregistrer un ticket gagné au tirage au sort
+     * Les données sont persistées en base de données
      */
     public PurchasedTicket recordLotteryWin(String username, String matchName, String category, double price) {
         Ticket fakeTicket = new Ticket(matchName, category, price);
-        PurchasedTicket purchase = new PurchasedTicket(fakeTicket);
+        PurchasedTicket purchase = new PurchasedTicket(username, fakeTicket);
         purchase.setStatus("WON"); // Mark as won from lottery
-
-        userPurchases.computeIfAbsent(username, k -> new ArrayList<>());
-        userPurchases.get(username).add(purchase);
-
+        purchasedTicketDao.create(purchase);
         return purchase;
+    }
+
+    /**
+     * Obtenir le nombre total de tickets achetés par un utilisateur
+     */
+    public long getTicketCount(String username) {
+        return purchasedTicketDao.countByUsername(username);
+    }
+
+    /**
+     * Obtenir tous les tickets achetés (admin)
+     */
+    public List<PurchasedTicket> getAllPurchasedTickets() {
+        return purchasedTicketDao.findAll();
     }
 }
 
