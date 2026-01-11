@@ -1172,12 +1172,7 @@ Le projet **Mondial 2030 - Plateforme de Gestion des Tickets** répond intégral
 - [Hibernate ORM Documentation](https://hibernate.org/orm/documentation/6.2/) - Guide Hibernate 6.2
 - [JavaFX Documentation](https://openjfx.io/openjfx-docs/) - Documentation OpenJFX
 - [Maven Documentation](https://maven.apache.org/guides/) - Guide Apache Maven
-
-### Tutoriels et Cours
-- [Baeldung - Hibernate Tutorial](https://www.baeldung.com/hibernate-5-spring) - Tutoriels Hibernate
-- [JetBrains Academy](https://www.jetbrains.com/academy/) - Cours Java avancé
-- [YouTube - Derek Banas](https://www.youtube.com/user/deaboranas) - Tutoriels Design Patterns
-
+  
 ### Ressources Techniques
 - [Stack Overflow](https://stackoverflow.com/) - Résolution de problèmes techniques
 - [GitHub](https://github.com/) - Hébergement du code source
