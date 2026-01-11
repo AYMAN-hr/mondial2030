@@ -35,49 +35,6 @@
 > - **Administrateur** : pour gérer les matchs et les tickets"
 
 ---
-
-### ÉTAPE 2: Architecture & Technologies (1 minute)
-
-**[Afficher: Structure du projet dans l'IDE + README.md]**
-
-> "Voici les technologies utilisées dans ce projet :
->
-> - **Java 17** comme langage principal
-> - **JavaFX** pour l'interface graphique moderne
-> - **Hibernate 6.2** pour le mapping objet-relationnel
-> - **MariaDB** comme base de données, déployée avec **Docker**
-> - **Maven** pour la gestion des dépendances
->
-> L'architecture suit le pattern **MVC** avec une séparation en couches :
-> - **Model** : Les entités (User, Match, Ticket, PurchasedTicket)
-> - **DAO** : L'accès aux données avec Hibernate
-> - **Service** : La logique métier
-> - **View** : Les contrôleurs JavaFX et fichiers FXML"
-
----
-
-### ÉTAPE 3: Base de Données (1 minute)
-
-**[Afficher: schema.sql ou diagramme de la BD]**
-
-> "La base de données contient 4 tables principales :
->
-> 1. **USERS** : stocke les utilisateurs avec leur rôle (Admin ou User)
-> 2. **MATCHS** : contient les matchs du Mondial 2030
-> 3. **TICKETS** : les billets disponibles avec leur catégorie et prix
-> 4. **PURCHASED_TICKETS** : l'historique des achats par utilisateur
->
-> Les relations importantes :
-> - Un **Match** peut avoir plusieurs **Tickets** (relation 1:N)
-> - Quand on supprime un match, tous ses tickets sont automatiquement supprimés grâce au **CASCADE DELETE**
-> - Chaque achat est lié à un utilisateur via son username"
-
-**[Action: Montrer docker-compose up -d db dans le terminal]**
-
-> "La base MariaDB est conteneurisée avec Docker pour faciliter le déploiement."
-
----
-
 ### ÉTAPE 4: Authentification (1 minute)
 
 **[Afficher: Page de Login]**
