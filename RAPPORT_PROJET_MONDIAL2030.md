@@ -25,7 +25,7 @@
 
 **Réalisé par :** AYMAN-hr
 
-**Encadré par :** [Nom du Professeur]
+**Encadré par :** LAGHLIMI Abderrahim
 
 **Année Universitaire :** 2025-2026
 
