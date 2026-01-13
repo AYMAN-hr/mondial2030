@@ -25,6 +25,18 @@
 
 **Réalisé par :** AYMAN-hr
 
+<!-- Profile image from GitHub -->
+![Profil AYMAN-hr](https://raw.githubusercontent.com/AYMAN-hr/mondial2030/main/WhatsApp%20Image%202025-10-28%20at%2011.22.48.jpeg)
+
+Si vous souhaitez inclure cette image directement dans l'application JavaFX, copiez le fichier depuis le dépôt GitHub dans `src/main/resources/images/` (créez le dossier si nécessaire) et renommez-le, par exemple, `profile.jpeg`.
+
+Exemple pour charger l'image dans un contrôleur JavaFX :
+
+```java
+Image img = new Image(getClass().getResourceAsStream("/images/profile.jpeg"));
+profileImageView.setImage(img);
+```
+
 **Encadré par :** LAGHLIMI Abderrahim
 
 **Année Universitaire :** 2025-2026
