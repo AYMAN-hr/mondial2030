@@ -26,7 +26,7 @@
 **Réalisé par :** AYMAN-hr
 
 <!-- Profile image from GitHub -->
-![Profil AYMAN-hr](https://raw.githubusercontent.com/AYMAN-hr/mondial2030/main/WhatsApp%20Image%202025-10-28%20at%2011.22.48.jpeg)
+<img src="WhatsApp Image 2025-10-28 at 11.22.48.jpeg"  width="300"/>
 
 **Encadré par :** LAGHLIMI Abderrahim
 
